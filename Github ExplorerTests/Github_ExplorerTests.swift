@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Github_Explorer
+
 
 class Github_ExplorerTests: XCTestCase {
 
