@@ -12,11 +12,13 @@ import Foundation
 final class EnvironmentConfiguration {
     private let config: NSDictionary
     
-    init(dictionary: NSDictionary) {
+    static let shared = EnvironmentConfiguration()
+    
+    private init(dictionary: NSDictionary) {
         config = dictionary
     }
     
-    convenience init() {
+    private convenience init() {
         let bundle = Bundle.main
         let configPath = bundle.path(forResource: "config", ofType: "plist")!
         let config = NSDictionary(contentsOfFile: configPath)!
@@ -41,5 +43,9 @@ extension EnvironmentConfiguration {
     
     var github_api_url: String {
         return config["GithubApiUrl"] as! String
+    }
+    
+    var email_support: String {
+        return config["EmailSupport"] as! String
     }
 }

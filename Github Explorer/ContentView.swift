@@ -9,19 +9,11 @@
 import SwiftUI
 
 struct ContentView : View {
-    @EnvironmentObject var networkManager: NetworkManager
+    
     
     var body: some View {
         VStack {
-            Button(action: {
-                self.networkManager.getAllRepositories()
-            }, label: {
-                Text("Get All Courses")
-            })
-            
-            List(networkManager.repositories) {
-                Text($0.name)
-            }
+           Text("Hello world")
         }
     }
 }
@@ -29,7 +21,7 @@ struct ContentView : View {
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(NetworkManager())
+        ContentView()
     }
 }
 #endif

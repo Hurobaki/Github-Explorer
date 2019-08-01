@@ -14,13 +14,15 @@ struct ListView : View {
     var title: String
     var image: String
     var color: Color
+    var destination: AnyView
+    
     
     var body: some View {
         VStack(alignment: .leading) {
             Text(title)
                 .font(.title)
                 .fontWeight(.bold)
-                .color(.white)
+                .foregroundColor(.white)
                 .padding(25)
                 .lineLimit(4)
                 .padding(.trailing, 30)
@@ -36,6 +38,7 @@ struct ListView : View {
         .cornerRadius(30)
         .frame(width: 246, height: 360)
         .padding(.trailing, 16)
+        
         
     }
 }
@@ -57,7 +60,7 @@ let listViewItemsData = [
 #if DEBUG
 struct ListView_Previews : PreviewProvider {
     static var previews: some View {
-        ListView(title: "pwet", image: "star", color: Color.blue)
+        ListView(title: "pwet", image: "star", color: Color.blue, destination: AnyView(Text(verbatim: "pwet")))
     }
 }
 #endif

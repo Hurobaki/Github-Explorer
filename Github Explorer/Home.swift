@@ -11,7 +11,7 @@ import SwiftUI
 struct Home : View {
     
     @State var show: Bool = false
-    @EnvironmentObject var store: ReposStore
+    @ObservedObject var store: ReposStore
     
     var body: some View {
         
@@ -20,25 +20,14 @@ struct Home : View {
             
             HomeList()
                 .blur(radius: show ? 20 : 0)
-                .animation(.basic())
-            
-            VStack {
-                Spacer()
-                Text("Test")
-                Spacer()
-            }
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .background(Color.red)
-            .animation(.basic())
-            .offset(x: store.showTest == MenuOpen.profile ? 0 :  UIScreen.main.bounds.width)
+                .animation(.easeInOut(duration: 0.6))
             
             
-            MenuButton()
-                .environmentObject(store)
-                .offset(x: -30, y: 80)
+            MenuButton(store: store)
+                .offset(x: -40, y: 80)
                 .animation(.spring())
             
-            MenuView().environmentObject(store)
+            MenuView(store: store)
             
            
             
@@ -49,7 +38,7 @@ struct Home : View {
 #if DEBUG
 struct Home_Previews : PreviewProvider {
     static var previews: some View {
-        Home().environmentObject(ReposStore())
+        Home(store: ReposStore())
     }
 }
 #endif
@@ -57,14 +46,14 @@ struct Home_Previews : PreviewProvider {
 struct MenuView : View {
     
     
-    @EnvironmentObject var store: ReposStore
+    @ObservedObject var store: ReposStore
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             Menu().environmentObject(store)
             Spacer()
         }
-        .padding(.top, 20)
+            .padding(.top, 20)
             .padding(30)
             .padding(.bottom, 50)
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: UIScreen.main.bounds.height - 150)
@@ -72,10 +61,10 @@ struct MenuView : View {
             .cornerRadius(30)
             .padding(.trailing, 60)
             .shadow(radius: 20)
-            .animation(.basic())
             .rotation3DEffect(Angle(degrees: store.showTest == MenuOpen.menu ? 0 : 60), axis: (x: 0, y: 10, z:0))
+            .animation(.easeInOut(duration: 0.2))
             .offset(x: store.showTest == MenuOpen.menu ? 0 : -UIScreen.main.bounds.width)
-            .tapAction {
+            .onTapGesture {
                 self.store.showTest = MenuOpen.none
             
         }
@@ -85,7 +74,7 @@ struct MenuView : View {
 
 struct MenuButton : View {
     
-    @EnvironmentObject var store: ReposStore
+    @ObservedObject var store: ReposStore
     
     var body: some View {
         return ZStack(alignment: .topLeading) {

@@ -10,14 +10,17 @@ import SwiftUI
 
 struct Settings : View {
     
-    @EnvironmentObject var store: ReposStore
+    @ObservedObject var store: ReposStore
     
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("General")) {
                     Toggle(isOn: $store.activateTouchID) {
-                        Text("Activate TouchID")
+                        Text("Receive notifications")
+                    }
+                    NavigationLink(destination: Text("nav")) {
+                        Text("Profile information")
                     }
                 }
                 
@@ -35,7 +38,7 @@ struct Settings : View {
 #if DEBUG
 struct Settings_Previews : PreviewProvider {
     static var previews: some View {
-        Settings().environmentObject(ReposStore())
+        Settings(store: ReposStore())
     }
 }
 #endif

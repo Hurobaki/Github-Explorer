@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct RepositoryDetail : View {
-    @EnvironmentObject var repoStore: ReposStore
+    @ObservedObject var store: ReposStore
     var repository: Repository
     
     var repoIndex: Int {
-        let repoIndex = repoStore.repos.firstIndex(where: {$0.id == repository.id})
+        let repoIndex = store.repositories.firstIndex(where: {$0.id == repository.id})
         
         return repoIndex ?? 0
     }
@@ -28,7 +28,7 @@ struct RepositoryDetail : View {
 
 struct RepositoryDetail_Previews : PreviewProvider {
     static var previews: some View {
-        RepositoryDetail(repository: dummyRepository)
+        RepositoryDetail(store: ReposStore(), repository: dummyRepository)
     }
 }
 #endif

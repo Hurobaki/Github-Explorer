@@ -9,63 +9,91 @@
 import SwiftUI
 
 struct RepositoryList : View {
-    @EnvironmentObject var store: ReposStore
+    @ObservedObject var store: ReposStore
     
     func move(from source: IndexSet, to destination: Int) {
-        store.repos.swapAt(source.first!, destination)
+        store.repositories.swapAt(source.first!, destination)
     }
+    
+    func openEmail() {
+        let appURL = URL(string: "mailto:noreply@gmail.com")!
+        
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(appURL as URL, options: [:], completionHandler: nil)
+        }
+        else {
+            UIApplication.shared.openURL(appURL as URL)
+        }
+    }
+    
+    @State private var isTapped = false
+    @State private var bgColor = Color.white
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(store.repos) { repository in
-                    NavigationLink(destination: RepositoryDetail(repository: repository)) {
-                        RepositoryRow(repository: repository)
-                    }.padding(.vertical, 8.0)
-                }.onDelete { index in
-                    self.store.repos.remove(at: index.first!)
-                }.onMove(perform: move)
-            }.navigationBarTitle("Repositories").navigationBarItems(leading: Button(action: { self.store.searchText = "hurobaki" }) {
+            VStack {
+                SearchUserBar(text: $store.searchText, action: { self.store.searchText = ""}, placerHolder: "Search ...")
+                if store.uiStatus == .loading {
+                    Spacer()
+                    LoadingView()
+                    Spacer()
+                } else {
+                    if ( !store.errorMessage.isEmpty) {
+                        VStack(spacing: 10) {
+                            Text(store.errorMessage).font(.headline).foregroundColor(Color.red)
+                            Text("If you think that is a bug please contact us.")
+                            Button( action: {
+                                withAnimation(.easeInOut(duration: 2)) {
+                                self.openEmail()
+                                self.isTapped.toggle()
+                                self.bgColor = self.bgColor == Color.white ? Color.gray : Color.white
+                                }
+                            } ) {
+                                VStack {
+                                    HStack(alignment: .center) {
+                                        Text("Contact us").padding()
+                                        Image(systemName: "envelope.fill")
+                                    }
+                                    .frame(minHeight: 0, maxHeight: 40)
+                                    .padding(.horizontal, 20)
+                                    .background(bgColor)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 10)
+                                }
+                            }.rotation3DEffect(Angle(degrees: isTapped ? 360 : 0), axis: (x: 0, y: 10, z: 0))
+                            Spacer()
+                        }
+                        
+                    } else {
+                        if store.user != nil {
+                            UserCard(user: store.user!)
+                        }
+                        List {
+                            Section(header: Text("\(String(store.repositories.count)) repositories")) {
+                                ForEach(store.repositories) { repository in
+                                    NavigationLink(destination: RepositoryDetail(store: self.store, repository: repository)) {
+                                        RepositoryRow(repository: repository)
+                                    }.padding(.vertical, 8.0)
+                                }.onDelete { index in
+                                    self.store.repositories.remove(at: index.first!)
+                                }.onMove(perform: move)
+                            }
+                        }
+                    }
+                }
+            }.navigationBarTitle("Github user").navigationBarItems(leading: Button(action: { self.store.searchText = "hurobaki" }) {
                 Image(systemName: "plus.circle")
-            },
-            trailing: EditButton())
+            },trailing: EditButton())
         }
     }
 }
 
-#if DEBUG
-struct RepositoryList_Previews : PreviewProvider {
-    static var previews: some View {
-        RepositoryList().environmentObject(ReposStore())
-    }
-}
-#endif
-
 /*
- VStack {
- NavigationView {
- VStack(spacing: 0) {
- 
- HStack {
- Image(systemName: "magnifyingglass").background(Color.blue).padding(.leading, 10.0)
- TextField($repoStore.searchText, placeholder: Text("Search")).background(Color.red)
- .padding(.vertical, 4.0)
- .padding(.trailing, 10.0)
- }
- .border(Color.secondary, width: 1, cornerRadius: 5)
- .padding()
- 
- List {
- ForEach(self.repoStore.repos) { repository in
- NavigationLink(
- destination: RepositoryDetail(repository: repository).environmentObject(self.repoStore)
- ) {
- RepositoryRow(repository: repository)
+ #if DEBUG
+ struct RepositoryList_Previews : PreviewProvider {
+ static var previews: some View {
+ RepositoryList().environmentObject(ReposStore())
  }
  }
- 
- }.navigationBarTitle(Text("Repositories"))
- }
- }
- }
+ #endif
  */

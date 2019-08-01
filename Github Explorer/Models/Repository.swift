@@ -83,15 +83,13 @@ struct Repository: Decodable, Identifiable, Hashable {
         case objc = "Objective-C"
         case haskell = "Haskell"
         case ruby = "Ruby"
+        case swift = "Swift"
+        case cpp = "C++"
+        case vimscript = "Vim script"
+        case webass = "WebAssembly"
+        case c = "C"
+        case perl = "Perl"
     }
 }
 
-extension String {
-    func capitalizingFirstLetter() -> String {
-        return prefix(1).capitalized + dropFirst()
-    }
-    
-    mutating func capitalizeFirstLetter() {
-        self = self.capitalizingFirstLetter()
-    }
-}
+

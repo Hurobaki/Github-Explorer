@@ -6,38 +6,45 @@
 //  Copyright © 2019 Firelabs. All rights reserved.
 //
 
+/*
+ RepositoryList().environmentObject(store).tabItem({
+     Image(systemName: "magnifyingglass").imageScale(.large)
+     Text("Search")
+ }).tag(0)
+ */
+
 import SwiftUI
 
 struct TabBar : View {
     
-    @EnvironmentObject var store: ReposStore
-    //@State private var selection = 1
+    @ObservedObject var store: ReposStore
+    @State private var selection = 1
     
     var body: some View {
-        TabbedView {
-            RepositoryList().environmentObject(store).tabItem({
+        TabView(selection: $selection) {
+            RepositoryList(store:store).tabItem({
                 Image(systemName: "magnifyingglass").imageScale(.large)
                 Text("Search")
             }).tag(0)
             
-            Home().environmentObject(store).tabItem({
+            Home(store: store).tabItem({
                 Image(systemName: "house").imageScale(.large)
                 Text("Home")
             }).tag(1)
             
-            Settings().environmentObject(store).tabItem({
+            Settings(store: store).tabItem({
                 Image(systemName: "gear").imageScale(.large)
                 Text("Settings")
             }).tag(2)
             
-        }.edgesIgnoringSafeArea(.top)
+            }.edgesIgnoringSafeArea(.top)
     }
 }
 
 #if DEBUG
 struct TabBar_Previews : PreviewProvider {
     static var previews: some View {
-        TabBar().environmentObject(ReposStore())
+        TabBar(store: ReposStore())
     }
 }
 #endif

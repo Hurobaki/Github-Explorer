@@ -23,7 +23,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let store = ReposStore()
-            window.rootViewController = UIHostingController(rootView: TabBar().environmentObject(store))
+            //PresentationLinkExample
+            //TabBar().environmentObject(store)
+            window.rootViewController = UIHostingController(rootView: TabBar(store: store))
             self.window = window
             window.makeKeyAndVisible()
         }

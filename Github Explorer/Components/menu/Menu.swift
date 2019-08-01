@@ -14,7 +14,7 @@ struct Menu : View {
     
     var body: some View {
         ForEach(menuItemData) { item in
-            MenuRow(image: item.image, title: item.title).tapAction {
+            MenuRow(image: item.image, title: item.title).onTapGesture {
                 self.store.showTest = .profile
             }
         }
