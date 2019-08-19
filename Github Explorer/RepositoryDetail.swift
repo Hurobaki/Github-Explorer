@@ -13,16 +13,33 @@ struct RepositoryDetail : View {
     var repository: Repository
     
     var repoIndex: Int {
-        let repoIndex = store.repositories.firstIndex(where: {$0.id == repository.id})
+        store.repositories.firstIndex(where: {$0.id == repository.id})!
         
-        return repoIndex ?? 0
+      
     }
     
     var body: some View {
-        Text("Detail")
+        VStack(alignment: .leading) {
+            HStack {
+                Text(repository.name)
+                Button(action: {
+                    self.store.repositories[self.repoIndex].isFavorite.toggle()
+                    self.store.favoriteRepositories = RealmService.shared.foo(of: Repository.self)
+                    self.store.objectWillChange.send()
+                }) {
+                    if self.store.repositories.count > 0 && self.store.repositories[self.repoIndex].isFavorite {
+                        Image(systemName: "star.fill").imageScale(.large).foregroundColor(Color.pink)
+                    } else {
+                        Image(systemName: "star").imageScale(.large).foregroundColor(Color.gray)
+                    }
+                        
+                }
+            }
+            
+            }.navigationBarTitle(Text(repository.name), displayMode: .inline)
     }
 }
-
+/*
 #if DEBUG
 //let dummyRepository = Repository(id: 1, name: "Pwet")
 
@@ -32,6 +49,7 @@ struct RepositoryDetail_Previews : PreviewProvider {
     }
 }
 #endif
+ */
 
 /*
  VStack(alignment: .leading) {

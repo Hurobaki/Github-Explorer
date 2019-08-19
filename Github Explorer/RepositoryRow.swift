@@ -23,14 +23,14 @@ struct RepositoryRow : View {
             
             VStack(alignment: .leading) {
                 Text(repository.name).font(.headline)
-                Text(repository.description ?? "No description provided.").lineLimit(2).lineSpacing(4).font(.subheadline).frame(height: 50.0)
+                Text(repository.desc ?? "No description provided.").lineLimit(2).lineSpacing(4).font(.subheadline).frame(height: 50.0)
             }
         }
     }
 }
 
 #if DEBUG
-let dummyRepository = Repository(id: 1, name: "Test")
+let dummyRepository = Repository()
 
 struct RepositoryRow_Previews : PreviewProvider {
     static var previews: some View {

@@ -8,17 +8,6 @@
 
 import SwiftUI
 
-/*
- Text(verbatim: "Github Explorer").font(.body)
- 
- Text(verbatim: "Github Explorer permet de récupérer l'ensemble des répertoires de l'utilisateur ou d'autres utilisateurs Github. Elle permet aussi de sauvegarder vos répertoires favoris et de les consulter ultérieurement. Enfin il est possible de rechercher des répertoires en fonction du nombre d'étoiles, de forks ...").font(.body).foregroundColor(Color.gray).lineLimit(nil)
- 
- Text(verbatim: "Technologie").font(.body)
- 
- Text(verbatim: "Cette application a été développée en utilisant le nouveau framework Apple \"SwiftUI\". Ce framework est à destination d'iOS 13. Cette technologie est donc toujours en phase béta et peut donc comporter certains bugs.").font(.body).foregroundColor(Color.gray).lineLimit(nil)
- 
- */
-
 struct InformationView : View {
     @Environment(\.presentationMode) private var isPresented
     
@@ -57,6 +46,7 @@ struct InformationView : View {
                 MultilineTextView(text: "Cette application a été développée en utilisant le nouveau framework Apple \"SwiftUI\". Ce framework est à destination d'iOS 13. Cette technologie est donc toujours en phase béta et peut donc comporter certains bugs.", color: .darkGray)
                 
             }.padding().padding(.top, 260)
+            
         }
         
     }

@@ -21,7 +21,7 @@ struct UserCard: View {
     
     var body: some View {
         Button(action: {
-            withAnimation(.easeOut(duration: 0.8)) {
+            withAnimation(.easeOut(duration: 0.5)) {
                 self.cornerRadius = self.cornerRadius == 30 ? 100 : 30
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
@@ -37,10 +37,10 @@ struct UserCard: View {
                         Text(user.name ?? "").font(.subheadline).foregroundColor(Color.white)
                     }
                     
-                }.frame(width: UIScreen.main.bounds.width - 10, height: 150).sheet(isPresented: $show, content: { Text("Pwet")}).background(Color("Color7"))
+                }.frame(width: UIScreen.main.bounds.width - 10, height: 150).background(Color("Color7"))
                 
-            }.sheet(isPresented: $show, content: { Text("Pwet") })
-        }.cornerRadius(cornerRadius).shadow(color: Color.gray, radius: 5, x: 0, y: 1).padding(.bottom, 5)
+            }
+        }.cornerRadius(cornerRadius).shadow(color: Color.gray, radius: 5, x: 0, y: 1).padding(.bottom, 5).sheet(isPresented: $show, content: { Text("User info") })
     }
 }
 

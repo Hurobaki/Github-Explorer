@@ -7,6 +7,8 @@
 //
 
 import SwiftUI
+import RealmSwift
+import Realm
 
 struct Home : View {
     
@@ -17,11 +19,12 @@ struct Home : View {
         
         ZStack {
             
-            
             HomeList()
                 .blur(radius: show ? 20 : 0)
                 .animation(.easeInOut(duration: 0.6))
             
+            FavoritesView(store: store)
+                .animation(.easeInOut(duration: 1))
             
             MenuButton(store: store)
                 .offset(x: -40, y: 80)
@@ -29,7 +32,6 @@ struct Home : View {
             
             MenuView(store: store)
             
-           
             
         }
     }

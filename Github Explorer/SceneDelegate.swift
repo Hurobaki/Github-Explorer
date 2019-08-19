@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let store = ReposStore()
             //PresentationLinkExample
             //TabBar().environmentObject(store)
+            //RealmService.shared
             window.rootViewController = UIHostingController(rootView: TabBar(store: store))
             self.window = window
             window.makeKeyAndVisible()

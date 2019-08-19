@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import RealmSwift
 
 enum URLSessionError: Error {
     case invalidResponse
@@ -36,13 +37,10 @@ extension String {
 
 extension URLSession {
     
-    typealias RequestURLSession = (URLRequest) -> AnyPublisher<Data, URLSessionError>
-    
     func send(request: URLRequest) -> AnyPublisher<Data, URLSessionError> {
         dataTaskPublisher(for: request)
             .mapError { URLSessionError.urlError($0) }
             .flatMap { data, response -> AnyPublisher<Data, URLSessionError> in
-                print("### FLAG")
                 guard let response = response as? HTTPURLResponse else {
                     print("### FLAG2")
                     return .fail(.invalidResponse)
@@ -53,8 +51,6 @@ extension URLSession {
                     return .fail(.serverErrorMessage(statusCode: response.statusCode,
                                                      data: data))
                 }
-                
-                print("### HERE 2 \(data)")
                 
                 return .just(data)
         }.eraseToAnyPublisher()
@@ -77,5 +73,12 @@ extension Publisher {
     static func fail(_ error: Failure) -> AnyPublisher<Output, Failure> {
         return Fail(error: error)
             .eraseToAnyPublisher()
+    }
+}
+
+extension Results {
+    func toArray<T>(ofType: T.Type) -> [T] {
+        let array = Array(self) as! [T]
+        return array
     }
 }

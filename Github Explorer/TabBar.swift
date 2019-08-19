@@ -18,7 +18,7 @@ import SwiftUI
 struct TabBar : View {
     
     @ObservedObject var store: ReposStore
-    @State private var selection = 1
+    @State private var selection: Int = 1
     
     var body: some View {
         TabView(selection: $selection) {
@@ -35,7 +35,7 @@ struct TabBar : View {
             Settings(store: store).tabItem({
                 Image(systemName: "gear").imageScale(.large)
                 Text("Settings")
-            }).tag(2)
+            }).tag(2).foregroundColor(Color.red)
             
             }.edgesIgnoringSafeArea(.top)
     }

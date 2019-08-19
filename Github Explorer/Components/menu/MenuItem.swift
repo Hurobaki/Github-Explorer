@@ -15,5 +15,6 @@ struct MenuItem: Identifiable {
 }
 
 let menuItemData = [
-    MenuItem(title: "My account", image: "person.crop.circle")
+    MenuItem(title: "My account", image: "person.crop.circle"),
+    MenuItem(title: "Favorites", image: "star.fill")
 ]

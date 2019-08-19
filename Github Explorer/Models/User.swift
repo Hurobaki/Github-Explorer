@@ -14,4 +14,8 @@ struct User: Hashable, Identifiable, Decodable {
     var login: String
     var avatar_url: URL
     var name: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id, login, avatar_url, name
+    }
 }

@@ -8,14 +8,33 @@
 
 import SwiftUI
 import Combine
+import RealmSwift
+import Realm
 
-struct Owner: Decodable, Identifiable, Hashable {
-    let id: Int
-    let login: String
+class Owner: Object, Decodable, Identifiable {
+    @objc dynamic var id: Int = 0
+    @objc dynamic var login: String = ""
     
+    override static func primaryKey() -> String? {
+        return "id"
+    }
     
-    init() {
-        self.id = 1
-        self.login = "pwet"
+    convenience init(id: Int, login: String) {
+        self.init()
+        self.id = id
+        self.login = login
+        
+    }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(value: Any, schema: RLMSchema) {
+           super.init(value: value, schema: schema)
+       }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
     }
 }

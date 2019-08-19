@@ -8,10 +8,12 @@
 
 import SwiftUI
 import Combine
+import RealmSwift
 
 enum MenuOpen {
     case menu
     case profile
+    case favorites
     case none
 }
 
@@ -24,6 +26,7 @@ class ReposStore: ObservableObject {
     
     private var cancellable: AnyCancellable? = nil
     private var showLoader: AnyCancellable? = nil
+    private var searchCancellable: AnyCancellable? = nil
     
     /// Constructor with EnvironmentConfiguration parameter
     /// - Parameter config: NSDictionary from config.plist file
@@ -34,18 +37,6 @@ class ReposStore: ObservableObject {
                 .removeDuplicates()
                 .debounce(for: 0.8, scheduler: DispatchQueue.main)
                 .sink { _ in
-                    /*
-                     self.searchUser() { result in
-                     print("### RESULT HERE \(result)")
-                     DispatchQueue.main.async {
-                     switch result {
-                     case .success(let user): self.user = user
-                     case .failure(let error): print(error)
-                     }
-                     }
-                     }
-                     
-                     */
                     self.searchUser()
                     self.searchUserRepositories()
         })
@@ -56,34 +47,33 @@ class ReposStore: ObservableObject {
             self.errorMessage = ""
             
         })
+        
+        favoriteRepositories = RealmService.shared.foo(of: Repository.self)
     }
     
     @Published var uiStatus: UIStatus = .done
     
-    @Published var searchText: String = ""
-    
-    @Published var repos: [User] = []
+    @Published var searchText: String = "Hurobaki"
     
     @Published var user: User? = nil
     
     @Published var repositories: [Repository] = []
     
+    @Published var favoriteRepositories: [Repository] = []
+    
+    @Published var errorMessage: String = ""
+    
     @Published var activateTouchID: Bool = false
     
     @Published var showTest: MenuOpen = .none
     
-    @Published var errorMessage: String = ""
-    
-    var searchCancellable: AnyCancellable? {
-        willSet {
-            searchCancellable?.cancel()
-        }
-    }
+    @Published var test: Bool = false
     
     private var searchReposCancellable: AnyCancellable?
     
     deinit {
         searchCancellable?.cancel()
+        searchReposCancellable?.cancel()
         cancellable?.cancel()
     }
     
@@ -131,7 +121,7 @@ class ReposStore: ObservableObject {
         urlComponents.queryItems = [
             URLQueryItem(name: "access_token", value: EnvironmentConfiguration.shared.github_token)
         ]
-        print("### \(urlComponents)")
+        
         var request = URLRequest(url: urlComponents.url!)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -139,7 +129,6 @@ class ReposStore: ObservableObject {
             .decode(type: [Repository].self, decoder: JSONDecoder())
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                print("### .sink() received the completion", String(describing: completion))
                 self.uiStatus = .done
                 switch completion {
                 case .finished:
@@ -151,9 +140,7 @@ class ReposStore: ObservableObject {
                    
                 }
             }, receiveValue: { repositories in
-                print("### .sink() received \(repositories)")
                 self.repositories = repositories
-                
             })
     }
 }
